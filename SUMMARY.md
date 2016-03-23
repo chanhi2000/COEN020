@@ -1,6 +1,7 @@
 # Summary
 
 - [Introduction](README.md)
+- [chapter02](lect/chap02.md)
 - [hw](hw/hw.md)
 	- [hw01](hw/hw01.md)
 	- [hw02](hw/hw02.md)
