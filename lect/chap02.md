@@ -23,18 +23,14 @@ Data Representation
 ## NUBMERS ARE DIFFERENT
 - Computers use binary numbers (0's and 1's).
 	- Requires more digits to represent the same magnitude.
-
 - Computers store and process numbers using a fixed number of digits (“fixed-precision”).
-
 - Computers represent signed numbers using 2's complement instead of the more natural (for humans) “sign-plus-magnitude” representation.
 
 
 ## POSITIONAL NUMBER SYSTEMS
 - Numeric values are represented by a sequence of digit symbols.
-
 - Symbols represent numeric values.
 	- Symbols are not limited to ‘0’-’9’!
-
 - Each symbol’s contribution to the total value of the number is weighted according to its position in the sequence.
 
 
@@ -54,4 +50,302 @@ $$
 (S_1S_0.S_{-1}S_{-2})_R=S_1\times{R}^1+S_0\times{R}^0+S_{-1}\times{R}^{-1}+S_{-2}\times{R}^{-2}
 $$
 
+
 ## CONVERTING RADIS $$R$$ to Decimal
+$$
+\begin{align*}
+36.72_8&=3\times8^{1}+6\times8^{0}+7\times8^{-}+2\times8^{-}\\
+&=24+6+0.875+0.03125\\
+&=30.90625_{10}
+\end{align*}
+$$
+> **NOTE**: Polynomial evaluation doesn’t work if you try to convert in the other direction – i.e., from decimal to something else!  Why?
+
+
+## BINARY TO DECIMAL CONVERSION
+Converting to decimal, so we can use polynomial evaluation:
+$$
+\begin{align*}
+10110101_2&=1×2^7+1×2^5+1×2^4+1×2^2+1×2^0\\
+&=128+32+16+4+1\\
+&=181_{10}
+\end{align*}
+$$
+
+
+## VARIATION ON POLYNOMIAL EVALUATION
+- example:
+$$
+\begin{align*}
+0.437_8&=\left(4\times8^{-1}\right)+\left(3\times8^{-2}\right)+\left(7\times8^{-3}\right)\\
+&=\left(4\times0.125\right)+\left(3\times0.015625\right)+\left(7\times0.001953125\right)\\
+&=\cdots
+\end{align*}
+$$
+
+- alternative approach
+$$
+\begin{align*}
+0.437_8&=\left(4\times8^{-1}\right)+\left(3\times8^{-2}\right)+\left(7\times8^{-3}\right)\\
+&=\frac{\left(4\times8^{(2)}+3\times8^{(1)}+7\times8^{(0)}\right)}{8^{(3)}}\\
+&=\frac{\left(4\times64+3\times8+7\times1\right)}{512}\\
+&=\frac{287}{512}=0.5605468751
+\end{align*}
+$$
+
+
+## PROBLEMS: $$N_{\text{R}}\to{N}_{10}$$
+$$110101_2$$
+$$.110101_2$$
+$$137_8$$
+$$.137_8$$
+$$10_3$$
+$$.10_3$$
+$$432_5$$
+$$.432_5$$
+$$3\text{F}.4\text{A}_{16}$$
+$$\text{F}0.0\text{D}_{16}$$
+
+
+## DECIMAL TO BINARY CONVERSION
+- Converting to binary — can’t use polynomial evaluation!
+
+- Whole part and fractional parts must be handled separately!
+	- __Whole part__: *Use repeated division*.
+	- __Fractional part__: *Use repeated multiplication*.
+	- Combine results when finished.
+
+
+## DECIMAL TO BINARY CONVERSION
+#### WHOLE PART: REPEATED DIVISION
+- Divide by target radix (2 in this case)
+- Remainders become digits in the new representation ($$0\le\text{digit}<R$$)
+- Digits produced in right to left order.
+- Quotient is used as next dividend.
+- Stop when the quotient becomes zero, but use the corresponding remainder.
+
+#### EXAMPLE
+| operation | quotiente | remainder |
+| :-------: | :-------: | :-------: |
+| $$97\div2$$ | 48 | 1 |
+| $$48\div2$$ | 24 | 0 |
+| $$24\div2$$ | 12 | 0 |
+| $$12\div2$$ | 6 | 0 |
+| $$6\div2$$ | 3 | 0 |
+| $$3\div2$$ | 1 | 1 |
+| $$1\div2$$ | 0 | 1 |
+
+$$
+\therefore\:\text{RESULT}=1100001_2
+$$
+
+#### FRACTIONAL PART: REPEATED MULTIPLICATION
+- Multiply by target radix (2 in this case)
+- Whole part of product becomes digit in the new representation ($$0\le\text{digit}<R$$)
+- Digits produced in left to right order.
+- Fractional part of product is used as next multiplicand.
+- Stop when the fractional part becomes zero (sometimes it won’t).
+
+#### EXAMPLE
+| operation | fractional part | whole part |
+| :-------: | :-------------: | :--------: |
+| $$0.1\times2=0.2$$ | 0.2 | 0 |
+| $$0.2\times2=0.4$$ | 0.4 | 0 |
+| $$0.4\times2=0.8$$ | 0.8 | 0 |
+| $$0.8\times2=1.6$$ | 0.6 | 1 |
+| $$0.6\times2=1.2$$ | 0.2 | 1 |
+| $$0.2\times2=0.4$$ | 0.4 | 0 |
+| $$\vdots$$ | $$\vdots$$ | $$\vdots$$ |
+
+$$
+\therefore\:\text{RESULT}=0.00011001100110011\cdots_{2}
+$$
+
+#### HOW MUCH SHOULD WE KEEP?
+- MATHEMATICIAN's answer:
+	- Use the proper notation: $$0.0\overline{0011}$$
+- SCIENTIST's answer:
+	- Preserve significant digits and round:
+		- 0.1
+		- 0.0001
+		- Round @ 5th digit: 0.0010
+- ENGINEER's answer:
+	- depends on number of bits in the variable (8, 16, 32, 64)
+
+
+#### MORAL
+- Some fractional numbers have an exact representation in one number system, but not in another!  E.g., $$\tfrac{1}{3}$$ has no exact representation in decimal, but does in **base 3**!
+$$
+\begin{align*}
+\frac{1}{3}&=0.3333\cdots_{10}\\
+&=0.1_{3}
+\end{align*}
+$$
+- What about $$\tfrac{1}{10}$$ when represented in binary?
+$$
+\begin{align*}
+\frac{1}{10}&=0.1_{10}\\
+&=0.00011001100110011\cdots_{2}
+\end{align*}
+$$
+- Can these representation errors accumulate?
+- What does this imply about equality comparisons of real numbers?
+
+
+## PROBLEMS: $$N_{10}\to{N}_{\text{R}}$$
+$$27_{10}\to{N}_{2}$$
+$$0.27_{10}\to{N}_{2}$$
+$$27_{10}\to{N}_{5}$$
+$$.27_{10}\to{N}_{5}$$
+$$\tfrac{1}{3}_{10}\to{N}_{3}$$
+$$27_{10}\to{N}_{8}$$
+$$0.27_{10}\to{N}_{8}$$
+$$27_{10}\to{N}_{16}$$
+$$0.27_{10}\to{N}_{16}$$
+
+
+## COUNTING
+- Principle is the same regardless of radix.
+	- Add $$1$$ to the least significant digit.
+	- If the result is less than $$R$$, write it down and copy all the remaining digits on the left.
+	- Otherwise, write down zero and add $$1$$ to the next digit position, etc.
+
+
+## COUNTING IN BINARY
+| decimal | binary |
+| :-----: | :----: |
+| 0 | 0000 |
+| 1 | 0001 |
+| 2 | 0010 |
+| 3 | 0011 |
+| 4 | 0100 |
+| 5 | 0101 |
+| 6 | 0110 |
+| 7 | 0111 |
+ - Note the pattern!
+	- LSB (bit 0) toggles on every count.
+	- Bit 1 toggles on every *other* count.
+	- Bit 2 toggles on every *fourth* count.
+	- Etc….
+
+
+## HEXADECIMAL NUMBERS
+- The *__number__* of digit symbols is determined by the radix (e.g., $$R=16$$)
+- The *__value__* of the digit symbols range from 0 to 15 ($$0$$ to $$R-1$$).
+- The *__symbols__* are 0-9 followed by A-F.
+- Conversion between binary and hex is trivial!
+- Use as a shorthand for binary (significantly fewer digits are required for same magnitude).
+
+
+## MEMORIZE THIS!
+| hexadecimal | binary |
+| :---------: | :----: |
+| 0 | 0000 |
+| 1 | 0001 |
+| 2 | 0010 |
+| 3 | 0011 |
+| 4 | 0100 |
+| 5 | 0101 |
+| 6 | 0110 |
+| 7 | 0111 |
+| 8 | 1000 |
+| 9 | 1001 |
+| A | 1010 |
+| B | 1011 |
+| C | 1100 |
+| D | 1101 |
+| E | 1110 |
+| F | 1111 |
+
+
+## BINARY/HEX CONVERSIONS
+- Hex digits are in one-to-one correspondence with groups of four binary digits:
+$$
+\begin{align*}
+&3\text{A}56.\text{E}2\text{F}8\\
+&=0011\:1010\:0101\:0110\:.\:1110\:0010\:1111\:1000
+\end{align*}
+$$
+- Conversion is a simple table lookup!
+- Zero-fill on left and right ends to complete the groups!
+- Works because $$16=2^4$$ (power relationship)
+
+
+## PROBLEMS: $$N_{\text{R}1}\to{N}_{\text{R}2}$$
+$$1101011_2\to{N}_{16}$$
+$$11.01011_2\to{N}_{16}$$
+$$1101011_2\to{N}_{8}$$
+$$11010.11_2\to{N}_{8}$$
+$$10220_3\to{N}_{9}$$
+$$10.220_3\to{N}_{9}$$
+$$\text{FACE}_{16}\to{N}_{2}$$
+$$\text{BEEF}_{16}\to{N}_{4}$$
+$$\text{FEED}_{16}\to{N}_{8}$$
+$$1846_{9}\to{N}_{3}$$
+
+
+## QUESTION:
+- Do you trust the used car salesman that tells you that the 1966 Mustang he wants to sell you has only the 13,000 miles that it’s odometer shows?
+- If not, what has happened?
+- Why?
+> PROBLEM OF "FIXED PRECISION"
+
+
+## REPRESENTATION ROLLOVER
+- Consequence of fixed precision.
+- Computers use fixed precision!
+- Digits are lost on the left-hand end.
+- Remaining digits are still correct.
+- Rollover while counting . . .
+	- Up: $$999999\to000000\:\:(R^{n}-1\to0)$$
+	- Down: $$000000\to999999\:\:(0\to{R}^{n}-1)$$
+
+
+## ROLLOVER IN UNSIGNED BINARY
+- Consider an 8-bit byte used to represent an unsigned integer:
+	- Range: $$00000000\to11111111\:\:(0\to255_{10})$$
+	- Incrementing a value of $$255$$ should yield $$256$$, but this exceeds the range.
+	- Decrementing a value of $$0$$ should yield $$-1$$, but this exceeds the range.
+	- Exceeding the range is known as *__overflow__*.
+
+
+## DIFFERENCE BETWEEN ROLLOVER AND OVERFLOW
+- *__Rollover__* describes a pattern sequence behavior.
+- *__Overflow__* describes an arithmetic behavior.
+- Whether or not rollover causes overflow *depends on how the patterns are interpreted* as numeric values!
+	- E.g., In signed two’s complement representation, $$11111111\to00000000$$ corresponds to counting from minus one to zero.
+
+
+## TWO INTERPRETATIONS
+$$
+\begin{align*}
+1010\:0111_2&\begin{cases}
+\underset{\text{unsigned}}{\rightarrow}&167_{10}\\
+\underset{\text{signed}}{\rightarrow}&-89_{10}
+\end{cases}
+\end{align*}
+$$
+- Signed vs. unsigned is a matter of 
+interpretation; thus *a single bit pattern can represent two different values*.
+-  Allowing both interpretations is useful:
+	- Some data (e.g., count, age) can never be negative, and having a greater range is useful.
+
+
+## WHY NOT SIGN+MAGNITUDE?
+- Complicates addition :
+	- To add, first check the signs. If they agree, then add the magnitudes and use the same sign; else subtract the smaller from the larger and use the sign of the larger. 
+	- How do you determine which is smaller/larger?
+- Complicates comparators:
+	- Two zeroes! 
+#### EXAMPLE:
+
+
+## WHY 2'S COMPLEMENT?
+- Just as easy to determine sign as in sign+magnitude.
+- Almost as easy to change the sign of a number.
+- Addition can proceed w/out worrying about which operand is larger.
+- A single zero!
+- One hardware adder works for both signed and unsigned operands.
+#### EXAMPLE:
+
+
