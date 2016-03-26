@@ -416,16 +416,17 @@ $$\therefore\:1011=11_{10}$$
 $$
 \begin{align*}
 +5&=0101\\
--5&=\underline{{\color{Red}1}}101
+-5&=1101
 \end{align*}
 $$
+
 - 2's complement:
 $$
 \begin{align*}
 +5&=0101\\
 \sim(5)&=1010\\
 -5&=\sim(5)+1\\
-&=101{\color{Red}1}
+&=1011
 \end{align*}
 $$
 
