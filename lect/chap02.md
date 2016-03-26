@@ -3,9 +3,9 @@ Data Representation
 
 ## KINDS OF DATA
 - #### Numbers
- 	- Integers
- 		- unsigned
- 		- signed
+	- Integers
+		- unsigned
+		- signed
 	- Reals
 		- fixed-point
 		- floating-point
@@ -325,7 +325,7 @@ $$
 \end{cases}
 \end{align*}
 $$
-- Signed vs. unsigned is a matter of 
+- Signed vs. unsigned is a matter of
 interpretation; thus *a single bit pattern can represent two different values*.
 -  Allowing both interpretations is useful:
 	- Some data (e.g., count, age) can never be negative, and having a greater range is useful.
@@ -333,11 +333,41 @@ interpretation; thus *a single bit pattern can represent two different values*.
 
 ## WHY NOT SIGN+MAGNITUDE?
 - Complicates addition :
-	- To add, first check the signs. If they agree, then add the magnitudes and use the same sign; else subtract the smaller from the larger and use the sign of the larger. 
+	- To add, first check the signs. If they agree, then add the magnitudes and use the same sign; else subtract the smaller from the larger and use the sign of the larger.
 	- How do you determine which is smaller/larger?
 - Complicates comparators:
-	- Two zeroes! 
+	- Two zeroes!
+
 #### EXAMPLE:
+$$
+\begin{matrix}
+&2_{10}\\
++&-7_{10}\\\hline
+&?
+\end{matrix}\:\:\:\:
+\begin{matrix}
+&0010\\
++&1111\\\hline
+&????
+\end{matrix}
+$$
+
+- since $$111>010$$
+$$
+\begin{matrix}
+&7_{10}\\
+-&2_{10}\\\hline
+&?
+\end{matrix}\:\:\:\:
+\begin{matrix}
+&111\\
+-&010\\\hline
+&101
+\end{matrix}
+$$
+
+- use sign of $$111$$:
+$$\therefore\:\underline{1}101=-5_{10}$$
 
 
 ## WHY 2'S COMPLEMENT?
@@ -346,6 +376,202 @@ interpretation; thus *a single bit pattern can represent two different values*.
 - Addition can proceed w/out worrying about which operand is larger.
 - A single zero!
 - One hardware adder works for both signed and unsigned operands.
+
 #### EXAMPLE:
+- signed:
+$$
+\begin{matrix}
+&2_{10}\\
++&-7_{10}\\\hline
+&?
+\end{matrix}\:\:\:\:
+\begin{matrix}
+&0010\\
++&1001\\\hline
+&1011
+\end{matrix}
+$$
+
+$$\therefore\:1011=-5_{10}$$
+
+- unsigned:
+$$
+\begin{matrix}
+&2_{10}\\
++&9_{10}\\\hline
+&?
+\end{matrix}\:\:\:\:
+\begin{matrix}
+&0010\\
++&1001\\\hline
+&1011
+\end{matrix}
+$$
+
+$$\therefore\:1011=11_{10}$$
+
+
+## CHANGING THE SIGN
+- sign+magnitude:
+$$
+\begin{align*}
++5&=0101\\
+-5&=\underline{{\color{Red}1}}101
+\end{align*}
+$$
+- 2's complement:
+$$
+\begin{align*}
++5&=0101\\
+\sim(5)&=1010\\
+-5&=\sim(5)+1\\
+&=101{\color{Red}1}
+\end{align*}
+$$
+
+
+## EASIER HAND METHOD
+- STEP 1:  Copy the bits from right to left, through and including the first 1.
+- STEP 2: Copy the inverse of the remaining bits.
+$$
+\begin{matrix}
+4&0{\color{Red}1}00\\
+\downarrow&\downarrow\\
+-4&{\color{Red}1}100
+\end{matrix}
+$$
+
+
+## REPRESENTATION WIDTH
+You must be sure to pad the original value out to the full representation width before applying the algorithm!
+- WRONG:
+$$
+\begin{align*}
++25_{10}&=11001_{2}\\
+-25_{10}&=\underset{\text{apply algorithm}}{00111_{2}}\\
+&=\underset{\text{expand to 8-bits}}{00000111_{2}}
+\end{align*}
+$$
+- RIGHT:
+$$
+\begin{align*}
++25_{10}&=11001_{2}\\
+&\left<\begin{matrix}
+\text{add}\begin{cases}\text{leading }0\text{s}&\text{if positive}\\\text{leading }1\text{s}&\text{if negative}\end{cases}
+\end{matrix}\right>\\
+-25_{10}&=\underset{\text{expand to 8-bits}}{00011001_{2}}\\
+&=\underset{\text{apply algorithm}}{11100111_{2}}
+\end{align*}
+$$
+
+
+## CONVERTING 2's COMPLEMENT TO DECIMAL
+#### METHOD #1
+- If MSB is 0, the number is positive.
+	- convert as if it were unsigned.
+- If MSB is 1, the number is negative.
+- Apply 2’s complement algorithm to find bit pattern of the corresponding positive magnitude
+- Convert the bit pattern to decimal.
+- Put a minus sign in front.
+
+#### EXAMPLE:
+$$
+\begin{align*}
+-(10110010_{2})&\to01001110_{2}\\
+&\left<01001110_{2}=\left(2^6+2^3+2^2+2^1\right)=78_{10}\right>\\
+\therefore\:10110010_{2}&=-78
+\end{align*}
+$$
+
+#### METHOD #2:
+Use polynomial evaluation, but make the contribution of the MSB be negative:
+$$
+\begin{align*}
+10110010_{2}&=(-1\times2^7)+(2^5)+(2^4)+(2^1)\\
+&=-128+32+16+2\\
+&=-78_{10}
+\end{align*}
+$$
+
+
+## 2's COMPLEMENT ANOMALY
+$$
+\begin{align*}
+-128&=1000\:0000\\
+-(-128)&=\sim(1000\:0000)+1\\
+&=0111\:1111+1\\
+&=1000\:0000
+\end{align*}
+$$
+
+Result is negative! *__Why__*?
+> OVERFLOW
+
+
+## RANGE OF UNSIGNED INTEGERS
+Each of '$$n$$' bits can have one of two values.
+$$
+\begin{align*}
+\begin{matrix}
+\text{Total }\#\text{ of}\\
+\text{ patterns of }n\text{ bits}
+\end{matrix}
+&=\underset{\text{do it }n\text{ times}}{2\times2\times2\times\cdots\times2}\\
+&=2^{n}
+\end{align*}
+$$
+- If $$n$$-bits are used to represent an unsigned integer value:
+	- __Range__: $$0$$ to $$2^n-1$$  ($$2^n$$ different values)
+
+
+## PROBLEMS: UNSIGNED RANGE
+$$\begin{matrix}\text{base }2&6\text{ digits}\end{matrix}$$
+$$\begin{matrix}\text{base }3&6\text{ digits}\end{matrix}$$
+$$\begin{matrix}\text{base }8&6\text{ digits}\end{matrix}$$
+$$\begin{matrix}\text{base }16&6\text{ digits}\end{matrix}$$
+
+
+## RANGE OF SIGNED BINARY INTEGERS
+- __Half__ of the $$2^n$$ patterns will be used for positive values, and half for negative.
+- Half is $$2^{n-1}$$.
+	- Positive Range: $$0$$ to  $$2^{n-1}-1$$  ($$2^{n-1}$$ patterns)
+	- Negative Range: $$-2^{n-1}$$  to  $$-1$$ ($$2^{n-1}$$ patterns)
+#### EXAMPLE
+- for 8-Bits ($$n=8$$)
+$$
+\begin{align*}
+\therefore\:\text{range}:&-2^7\:\text{to}\:+2^7-1
+\end{align*}
+$$
+
+
+## RROBLEMS: 2's COMPLEMENT RANGE
+$$5\:\text{bits}$$
+$$10\:\text{bits}$$
+$$16\:\text{bits}$$
+
+
+## DECIMAL ADDITION TABLE
+
+
+## DECIMAL ADDITION USING TABLE
+
+
+## BINARY ADDITION & CARRIES
+| $$C_\text{in}$$ | $$X$$ | $$Y$$ | $$n$$ | $$C_\text{out}$$ | $$S$$ |
+| :-------------: | :---: | :---: | :---: | :--------------: | :---: |
+| 0 | 0 | 0 | 0 | 0 | 0 |
+| 0 | 0 | 1 | 1 | 0 | 1 |
+| 0 | 1 | 0 | 1 | 0 | 1 |
+| 0 | 1 | 1 | 2 | 1 | 0 |
+| 1 | 0 | 0 | 1 | 0 | 1 |
+| 1 | 0 | 1 | 2 | 1 | 0 |
+| 1 | 1 | 0 | 2 | 1 | 0 |
+| 1 | 1 | 1 | 3 | 1 | 1 |
+
+- Column "$$n$$" is simply the sum of $$C_\text{in}$$, $$X$$ and $$Y$$.
+- Columns $$C_\text{out}$$ & $$S$$ are simply the binary representation of $$n$$.
+
+
 
 
