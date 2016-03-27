@@ -1,7 +1,7 @@
 # read02a
 Embedded.com: Introduction to fixed-width integers
 
-**For embedded programmers the most important improvement to C in the C99 standards is the new stdint.h header file.**
+> For embedded programmers the most important improvement to C in the C99 standards is the new `stdint.h` header file.
 
 Computer programmers don't always care how wide an integer is when held by the processor. For example, when we write:
 ```c
@@ -18,14 +18,14 @@ In the process of using memory-mapped I/O, it's common to write code like that i
 
 #### Listing 1: Memory-mapped I/O example
 ```c
-typedef struct 
+typedef struct
 {
 	unsigned int count; 		// Current count register; offset 0x00.
 	unsigned int max; 			// Maximum count register; offset 0x02.
 	unsigned int _reserved; 	// Unused 16-bit register; offset 0x04.
 	unsigned int flags;			// Control/status register; offset 0x06.
 } Counter;
-Counter volatile * const pCounter = 0x10000000; 
+Counter volatile * const pCounter = 0x10000000;
 // Chip base address.
 
 ...
@@ -86,7 +86,7 @@ Of course, if you don't have a C99-compliant compiler yet you'll still have to w
 
 #### Listing 2: An anonymous union allows the compiler to report typedef errors automatically
 ```c
-static union 
+static union
 {
 	char int8_t_incorrect [sizeof( int8_t)==1];
 	char uint8_t_incorrect [sizeof( uint8_t)==1];

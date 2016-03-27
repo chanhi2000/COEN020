@@ -1,7 +1,7 @@
 # read01e
 Embedded.com: Introduction to Real Time
 
-**Real-time comes in various flavors. This article is an introduction to the different varieties, as well as an exploration of important related concepts.**
+> Real-time comes in various flavors. This article is an introduction to the different varieties, as well as an exploration of important related concepts.
 
 Many embedded systems can be characterized as real time. A real-time system is one in which the correctness of the computations not only depends on their logical correctness, but also on the time at which the result is produced. In other words, a late answer is a wrong answer.
 
