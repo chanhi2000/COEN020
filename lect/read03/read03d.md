@@ -16,7 +16,7 @@ The IEEE single precision floating point standard representation requires a 32 b
 The value V represented by the word may be determined as follows:
 
 - If `E` is 255 and `F` is nonzero, then `V=NaN` (i.e. "Not a number")
-- If `E` is 255 and `F` is zero and `S is 1, then `V` is $$-infinity.
+- If `E` is 255 and `F` is zero and `S is 1, then `V` is -infinity.
 - If `E` is 255 and `F` is zero and `S` is 0, then `V` is infinity.
 - If $$0<E<255$$ then `V=(-1)**S * 2 ** (E-127) * (1.F)` where "`1.F`" is intended to represent the binary number created by prefixing `F` with an implicit leading 1 and a binary point.
 - If `E` is 0 and `F` is nonzero, then `V=(-1)**S * 2 ** (-126) * (0.F)` These are "unnormalized" values.
